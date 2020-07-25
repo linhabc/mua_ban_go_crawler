@@ -1,0 +1,55 @@
+func (users *Users) GetNextPages(doc *goquery.Document) error {
+	if err != nil {
+		return err
+	}
+	nextPageLink, _ := doc.Find("#next-link").Attr("href") // Đọc dữ liệu từ thẻ a của ul.pagination
+	if lastPageLink == "javascript:void();" {              // Trường hợp chỉ có 1 page thì sẽ không có url
+		users.TotalPages = 1
+		return nil
+	}
+
+	users.TotalPages++
+	return nil
+}
+
+func (users *Users) getUsersByUrl(url string) error {
+	// Request the HTML page.
+	res, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+	}
+
+	// Load the HTML document
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+
+	if err != nil {
+		return err
+	}
+
+}
+
+
+func (users *Users) GetAllUsers(currentUrl string) error {
+	eg := errgroup.Group{}
+	if users.TotalPages > 0 {
+		for i := 1; i <= users.TotalPages; i++ { // Lặp qua từng trang đã được phân trang
+			uri := fmt.Sprintf("%v?page=%v", currentUrl, i) // Tìm ra url của từng trang bằng cách nối chuỗi: *"url ban đầu +  ?page= + số trang"*
+
+			eg.Go(func() error { // Tạo ra số lượng group goroutines bằng với số page, cùng đồng thời đi thu thập thông tin ebook
+				err := users.getUsersByUrl(uri) // Thu thập thông tin ebook qua url của page
+				if err != nil {
+					return err
+				}
+				return nil
+			})
+		}
+		if err := eg.Wait(); err != nil { // Error Group chờ đợi các group goroutines done, nếu có lỗi thì trả về
+			return err
+		}
+	}
+	return nil
+}
