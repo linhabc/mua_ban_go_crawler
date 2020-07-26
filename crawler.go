@@ -117,6 +117,6 @@ func main() {
 
 	userJSON, err := json.Marshal(users) // convert User sang JSON
 	checkError(err)
-	err = ioutil.WriteFile("output.json", userJSON, 0644) // Ghi dữ liệu vào file JSON
+	err = ioutil.WriteFile("output_full.json", userJSON, 0644) // Ghi dữ liệu vào file JSON
 	checkError(err)
 }
