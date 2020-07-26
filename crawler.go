@@ -71,7 +71,7 @@ func (users *Users) getAllUserInformation(doc *goquery.Document) error {
 	doc.Find("a.list-item__link").Each(func(i int, s *goquery.Selection) {
 		userLink, _ := s.Attr("href")
 		go users.getUserInformation(userLink) // create goroutines
-		println(userLink)
+		// println(userLink)
 	})
 	return nil
 }
@@ -108,15 +108,24 @@ func main() {
 	users.TotalPages++
 
 	for i := 2; i <= 200; i++ {
+
 		users.TotalPages++
 		nextPageLink := users.getNexURL(res)
-		res := getHTMLPage(nextPageLink)
+
+		println(nextPageLink)
+
+		res = getHTMLPage(nextPageLink)
+
+		// pageNum := strconv.Itoa(i)
+		// res := getHTMLPage("https://muaban.net/o-to-toan-quoc-l0-c4?cp=" + pageNum)
+		// println("https://muaban.net/o-to-toan-quoc-l0-c4?cp=" + pageNum)
+
 		err := users.getAllUserInformation(res)
 		checkError(err)
 	}
 
 	userJSON, err := json.Marshal(users) // convert User sang JSON
 	checkError(err)
-	err = ioutil.WriteFile("output_full.json", userJSON, 0644) // Ghi dữ liệu vào file JSON
+	err = ioutil.WriteFile("output_all_new.json", userJSON, 0644) // Ghi dữ liệu vào file JSON
 	checkError(err)
 }
