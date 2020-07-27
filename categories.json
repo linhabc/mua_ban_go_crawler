@@ -1,0 +1,36 @@
+{
+  "total": 10,
+  "categories": [
+    {
+      "title": "Bất động sản",
+      "url": "https://muaban.net/mua-ban-nha-dat-cho-thue-toan-quoc-l0-c3"
+    },
+    {
+      "title": "Việc làm, Tuyển sinh",
+      "url": "https://muaban.net/viec-lam-tuyen-sinh-toan-quoc-l0-c1"
+    },
+    { "title": "Ô tô", "url": "https://muaban.net/o-to-toan-quoc-l0-c4" },
+    { "title": "Xe máy", "url": "https://muaban.net/xe-may-toan-quoc-l0-c5" },
+    { "title": "Dịch vụ", "url": "https://muaban.net/dich-vu-toan-quoc-l0-c9" },
+    {
+      "title": "Đồ điện tử",
+      "url": "https://muaban.net/do-dien-tu-toan-quoc-l0-c6"
+    },
+    {
+      "title": "Điện máy, Đồ gia dụng",
+      "url": "https://muaban.net/dien-may-do-gia-dung-toan-quoc-l0-c7"
+    },
+    {
+      "title": "Sở thích, Mặt hàng khác",
+      "url": "https://muaban.net/so-thich-mat-hang-khac-toan-quoc-l0-c8"
+    },
+    {
+      "title": "Thời trang, Mỹ phẩm",
+      "url": "https://muaban.net/thoi-trang-my-pham-toan-quoc-l0-c2"
+    },
+    {
+      "title": "Đối tác, Cộng đồng",
+      "url": "https://muaban.net/doi-tac-cong-dong-toan-quoc-l0-ca"
+    }
+  ]
+}
