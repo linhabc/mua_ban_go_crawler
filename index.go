@@ -9,18 +9,29 @@ import (
 func crawlFromCategory(category Category) {
 	users := NewUsers()
 	res := getHTMLPage(category.URL)
+
+	//handle error
+	if res == nil {
+		return
+	}
 	err := users.getAllUserInformation(res)
 	checkError(err)
 	users.TotalPages++
 
 	for i := 2; i <= 200; i++ {
-
 		users.TotalPages++
 		nextPageLink := users.getNexURL(res)
 
-		println(nextPageLink)
+		if nextPageLink == "" {
+			break
+		}
 
 		res = getHTMLPage(nextPageLink)
+
+		//handle error
+		if res == nil {
+			break
+		}
 
 		err := users.getAllUserInformation(res)
 		checkError(err)
@@ -36,6 +47,7 @@ func crawlFromCategory(category Category) {
 }
 
 func main() {
+
 	file, _ := ioutil.ReadFile("categories.json")
 
 	data := Categories{}

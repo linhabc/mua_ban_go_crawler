@@ -11,7 +11,10 @@
     },
     { "title": "Ô tô", "url": "https://muaban.net/o-to-toan-quoc-l0-c4" },
     { "title": "Xe máy", "url": "https://muaban.net/xe-may-toan-quoc-l0-c5" },
-    { "title": "Dịch vụ", "url": "https://muaban.net/dich-vu-toan-quoc-l0-c9" },
+    {
+      "title": "Dịch vụ",
+      "url": "https://muaban.net/dich-vu-toan-quoc-l0-c9"
+    },
     {
       "title": "Đồ điện tử",
       "url": "https://muaban.net/do-dien-tu-toan-quoc-l0-c6"
