@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"sync"
 )
 
 func crawlFromCategory(category Category) {
@@ -42,23 +43,36 @@ func crawlFromCategory(category Category) {
 	checkError(err)
 
 	// Ghi dữ liệu vào file JSON
-	err = ioutil.WriteFile(category.Title+".json", userJSON, 0644)
+	err = ioutil.WriteFile("./output/"+category.Title+".json", userJSON, 0644)
 	checkError(err)
 }
 
-func main() {
+// func worker(jobs <-chan int) {
+// 	for j := range jobs {
 
+// 	}
+// }
+
+func main() {
+	// jobs := make(chan int)
+
+	var wg sync.WaitGroup
 	file, _ := ioutil.ReadFile("categories.json")
 
 	data := Categories{}
 
 	_ = json.Unmarshal([]byte(file), &data)
 
-	for i := 4; i < len(data.List); i++ {
+	for i := 1; i < len(data.List); i++ {
+		wg.Add(1)
 		fmt.Println("Title: ", data.List[i].Title)
 		fmt.Println("URL: ", data.List[i].URL)
 
-		crawlFromCategory(data.List[i])
+		go func(i int) {
+			crawlFromCategory(data.List[i])
+			wg.Done()
+		}(i)
 	}
 
+	wg.Wait()
 }
