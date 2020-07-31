@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"sync"
 	"time"
+
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 func crawlFromCategory(category Category) {
@@ -16,6 +18,7 @@ func crawlFromCategory(category Category) {
 	if res == nil {
 		return
 	}
+
 	err := users.getAllUserInformation(res)
 	checkError(err)
 	users.TotalPages++
@@ -56,18 +59,8 @@ func worker(id int, jobs <-chan Category) {
 	}
 }
 
-func checkExist() {
-
-}
-
-func crawlAllFromCategories() {
+func crawlAllFromCategories(data Categories) {
 	var wg sync.WaitGroup
-
-	file, _ := ioutil.ReadFile("categories.json")
-
-	data := Categories{}
-
-	_ = json.Unmarshal([]byte(file), &data)
 
 	jobs := make(chan Category, 100)
 
@@ -88,13 +81,35 @@ func crawlAllFromCategories() {
 	wg.Wait()
 }
 
+func checkExist() {
+
+}
+
 func main() {
+
+	// get json data
+	file, _ := ioutil.ReadFile("categories.json")
+
+	data := Categories{}
+
+	_ = json.Unmarshal([]byte(file), &data)
+
+	db := make([]*leveldb.DB, len(data.List))
+
+	// open levelDb
+	for i := 0; i < len(data.List); i++ {
+		println(data.List[i].Title)
+		db[i] = createOrOpenDb("./db/" + data.List[i].Title)
+		defer db[i].Close()
+	}
+
+	// schedule to run each 6 hour
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
 		for true {
-			crawlAllFromCategories()
+			crawlAllFromCategories(data)
 			time.Sleep(6 * time.Hour)
 		}
 		wg.Done()
@@ -102,8 +117,3 @@ func main() {
 
 	wg.Wait()
 }
-
-//  id sdt
-//  level db ko co muti thread
-//  nhan vao id -> co hay ko
-//  2 routine, 1 read + 1 write

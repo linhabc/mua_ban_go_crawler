@@ -36,3 +36,13 @@ type Users struct {
 func NewUsers() *Users {
 	return &Users{}
 }
+
+type DbUser struct {
+	Id          string `json:"id"`
+	PhoneNumber string `json:"phone"`
+}
+
+type DbUsers struct {
+	Total int    `json:"total"`
+	List  []User `json:"users"`
+}
