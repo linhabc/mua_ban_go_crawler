@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 func getHTMLPage(url string) *goquery.Document {
@@ -12,7 +13,7 @@ func getHTMLPage(url string) *goquery.Document {
 	res, err := http.Get(url)
 	if err != nil {
 		println("ERROR GET")
-		log.Fatal(err)
+		return nil
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
@@ -35,6 +36,7 @@ func (users *Users) getNexURL(doc *goquery.Document) string {
 
 	print("NEXTPAGE: ")
 	println(nextPageLink)
+
 	// Trường hợp không có url
 	if nextPageLink == "" {
 		println("End of Category")
@@ -44,32 +46,37 @@ func (users *Users) getNexURL(doc *goquery.Document) string {
 	return nextPageLink
 }
 
-func (users *Users) getAllUserInformation(doc *goquery.Document) error {
+func (users *Users) getAllUserInformation(doc *goquery.Document, db *leveldb.DB) error {
 	doc.Find("a.list-item__link").Each(func(i int, s *goquery.Selection) {
 		userLink, _ := s.Attr("href")
-		go users.getUserInformation(userLink) // create goroutines
+
+		// create goroutines
+		go users.getUserInformation(userLink, db)
 	})
 	return nil
 }
 
-func (users *Users) getUserInformation(url string) {
+func (users *Users) getUserInformation(url string, db *leveldb.DB) {
 	res := getHTMLPage(url)
 	if res == nil {
 		return
 	}
 
-	userName := res.Find(".user-info__fullname").Text()
-	title := res.Find(".title").Text()
-	price := res.Find(".price-container__value").Text()
+	// check if id-url is exit in db or not
+	checkExist := getData(db, url)
+	if checkExist != "" {
+		println("Exist: " + url)
+		return
+	}
+
 	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
 	user := User{
-		URL:         url,
-		UserName:    userName,
-		Title:       title,
-		Price:       price,
+		Id:          url,
 		PhoneNumber: phoneNum,
 	}
+
+	putData(db, url, phoneNum)
 
 	users.TotalUsers++
 	users.List = append(users.List, user)

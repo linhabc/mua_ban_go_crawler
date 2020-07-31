@@ -16,33 +16,17 @@ func newCategories() *Categories {
 	return &Categories{}
 }
 
-// User is a
 type User struct {
-	URL         string `json:"url"`
-	UserName    string `json:"user_name"`
-	Title       string `json:"title"`
-	Price       string `json:"price"`
-	PhoneNumber string `json:"phone_number"`
-}
-
-// Users is a
-type Users struct {
-	TotalPages int    `json:"total_pages"`
-	TotalUsers int    `json:"total_users"`
-	List       []User `json:"users"`
-}
-
-// NewUsers is a
-func NewUsers() *Users {
-	return &Users{}
-}
-
-type DbUser struct {
 	Id          string `json:"id"`
 	PhoneNumber string `json:"phone"`
 }
 
-type DbUsers struct {
-	Total int    `json:"total"`
-	List  []User `json:"users"`
+type Users struct {
+	TotalUsers int    `json:"totalUsers"`
+	TotalPages int    `json:"totalPages"`
+	List       []User `json:"users"`
+}
+
+func NewUsers() *Users {
+	return &Users{}
 }

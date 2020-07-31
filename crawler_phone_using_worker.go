@@ -6,11 +6,13 @@ import (
 	"io/ioutil"
 	"sync"
 	"time"
-
-	"github.com/syndtr/goleveldb/leveldb"
 )
 
 func crawlFromCategory(category Category) {
+	// open leveldb connection
+	db := createOrOpenDb("./db/" + category.Title)
+	defer db.Close()
+
 	users := NewUsers()
 	res := getHTMLPage(category.URL)
 
@@ -19,7 +21,7 @@ func crawlFromCategory(category Category) {
 		return
 	}
 
-	err := users.getAllUserInformation(res)
+	err := users.getAllUserInformation(res, db)
 	checkError(err)
 	users.TotalPages++
 
@@ -38,7 +40,7 @@ func crawlFromCategory(category Category) {
 			break
 		}
 
-		err := users.getAllUserInformation(res)
+		err := users.getAllUserInformation(res, db)
 		checkError(err)
 	}
 
@@ -52,14 +54,7 @@ func crawlFromCategory(category Category) {
 	checkError(err)
 }
 
-func worker(id int, jobs <-chan Category) {
-	for j := range jobs {
-		fmt.Println("worker", id, "processing job", j)
-		crawlFromCategory(j)
-	}
-}
-
-func crawlAllFromCategories(data Categories) {
+func crawlAllFromCategories(categories Categories) {
 	var wg sync.WaitGroup
 
 	jobs := make(chan Category, 100)
@@ -69,11 +64,8 @@ func crawlAllFromCategories(data Categories) {
 		go worker(w, jobs)
 	}
 
-	for i := 0; i < len(data.List); i++ {
-		fmt.Println("Title: ", data.List[i].Title)
-		fmt.Println("URL: ", data.List[i].URL)
-
-		jobs <- data.List[i]
+	for i := 0; i < len(categories.List); i++ {
+		jobs <- categories.List[i]
 	}
 
 	close(jobs)
@@ -81,27 +73,20 @@ func crawlAllFromCategories(data Categories) {
 	wg.Wait()
 }
 
-func checkExist() {
-
+func worker(id int, jobs <-chan Category) {
+	for j := range jobs {
+		fmt.Println("worker ", id, "processing job ", j)
+		crawlFromCategory(j)
+	}
 }
 
 func main() {
-
-	// get json data
+	// get categories from json file
 	file, _ := ioutil.ReadFile("categories.json")
 
 	data := Categories{}
 
 	_ = json.Unmarshal([]byte(file), &data)
-
-	db := make([]*leveldb.DB, len(data.List))
-
-	// open levelDb
-	for i := 0; i < len(data.List); i++ {
-		println(data.List[i].Title)
-		db[i] = createOrOpenDb("./db/" + data.List[i].Title)
-		defer db[i].Close()
-	}
 
 	// schedule to run each 6 hour
 	var wg sync.WaitGroup
