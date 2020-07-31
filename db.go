@@ -1,6 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -23,9 +27,38 @@ func bytesToString(data []byte) string {
 	return string(data[:])
 }
 
-func iterator() {}
+func exportDatabaseToJson(url string) {
+	db := createOrOpenDb("./db/" + url)
+	users := NewUsers()
+	var count int
+	defer db.Close()
 
-func exportDatabaseToJson() {}
+	iter := db.NewIterator(nil, nil)
+	for iter.Next() {
+		key := bytesToString(iter.Key())
+		value := bytesToString(iter.Value())
+		count++
+		user := User{
+			Id:          key,
+			PhoneNumber: value,
+		}
+
+		users.List = append(users.List, user)
+
+		fmt.Printf("Key: %s, Value: %s", key, value)
+		println("")
+	}
+
+	users.TotalUsers = count
+
+	// convert User sang JSON
+	userJSON, err := json.Marshal(users)
+	checkError(err)
+
+	// Ghi dữ liệu vào file JSON
+	err = ioutil.WriteFile("./output/"+url+".json", userJSON, 0644)
+	checkError(err)
+}
 
 // func mainTest() {
 
@@ -73,6 +106,10 @@ func exportDatabaseToJson() {}
 // 	println(count)
 // 	iter.Release()
 // 	_ = iter.Error()
+// }
+
+// func main() {
+// 	exportDatabaseToJson("Ô tô")
 // }
 
 //  level db ko co muti thread

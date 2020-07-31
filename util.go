@@ -62,7 +62,7 @@ func (users *Users) getUserInformation(url string, db *leveldb.DB) {
 		return
 	}
 
-	// check if id-url is exit in db or not
+	// check if id(url) is exit in db or not
 	checkExist := getData(db, url)
 	if checkExist != "" {
 		println("Exist: " + url)

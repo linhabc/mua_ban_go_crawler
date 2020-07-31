@@ -75,7 +75,7 @@ func crawlAllFromCategories(categories Categories) {
 
 func worker(id int, jobs <-chan Category) {
 	for j := range jobs {
-		fmt.Println("worker ", id, "processing job ", j)
+		fmt.Println("worker: ", id, "processing job: ", j)
 		crawlFromCategory(j)
 	}
 }
@@ -88,14 +88,14 @@ func main() {
 
 	_ = json.Unmarshal([]byte(file), &data)
 
-	// schedule to run each 6 hour
+	// schedule to run each 3 hour
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
 		for true {
 			crawlAllFromCategories(data)
-			time.Sleep(6 * time.Hour)
+			time.Sleep(3 * time.Hour)
 		}
 		wg.Done()
 	}()
