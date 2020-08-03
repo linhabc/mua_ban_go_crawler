@@ -75,6 +75,10 @@ func crawlAllFromCategories(categories Categories) {
 }
 
 func worker(id int, jobs <-chan Category) {
+	// create output directory
+	if _, err := os.Stat("./output"); os.IsNotExist(err) {
+		os.Mkdir("./output", 0755)
+	}
 
 	for j := range jobs {
 		// open or create file
