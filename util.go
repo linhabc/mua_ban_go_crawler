@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -65,21 +66,24 @@ func (users *Users) getUserInformation(url string, category string, f *os.File, 
 		return
 	}
 
+	splitResult := strings.Split(url, "-")
+	id := splitResult[len(splitResult)-1]
+
 	// check if id(url) is exit in db or not
-	checkExist := getData(db, url)
+	checkExist := getData(db, id)
 	if checkExist != "" {
-		println("Exist: " + url)
+		println("Exist: " + id)
 		return
 	}
 
 	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
 	user := User{
-		Id:          url,
+		Id:          id,
 		PhoneNumber: phoneNum,
 	}
 
-	putData(db, url, phoneNum)
+	putData(db, id, phoneNum)
 
 	// convert User sang JSON
 	userJSON, err := json.Marshal(user)

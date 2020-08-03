@@ -77,9 +77,11 @@ func crawlAllFromCategories(categories Categories) {
 func worker(id int, jobs <-chan Category) {
 
 	for j := range jobs {
+		// open or create file
 		dt := time.Now()
-		f, _ := os.OpenFile("./output/"+j.Title+dt.Format("20060102150405")+".json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		f, _ := os.OpenFile("./output/"+j.Title+"___"+dt.Format("20060102150405")+".json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 		fmt.Println("worker: ", id, "processing job: ", j)
+
 		crawlFromCategory(j, f)
 	}
 }

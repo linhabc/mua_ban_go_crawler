@@ -1,6 +1,16 @@
 =============== Aug 3, 2020 (+07) ===============
-14:50:33.247698 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
-14:50:33.329724 db@open opening
-14:50:33.330183 version@stat F·[] S·0B[] Sc·[]
-14:50:33.371972 db@janitor F·2 G·0
-14:50:33.372136 db@open done T·42.294381ms
+15:18:31.330793 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:18:31.412393 db@open opening
+15:18:31.415244 version@stat F·[] S·0B[] Sc·[]
+15:18:31.496430 db@janitor F·2 G·0
+15:18:31.497080 db@open done T·84.650111ms
+=============== Aug 3, 2020 (+07) ===============
+15:18:46.902881 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:18:46.903089 version@stat F·[] S·0B[] Sc·[]
+15:18:46.903105 db@open opening
+15:18:46.903174 journal@recovery F·1
+15:18:46.905619 journal@recovery recovering @1
+15:18:46.930436 memdb@flush created L0@2 N·120 S·2KiB "id2..219,v58":"id5..578,v57"
+15:18:46.930915 version@stat F·[1] S·2KiB[2KiB] Sc·[0.25]
+15:18:47.057383 db@janitor F·3 G·0
+15:18:47.057440 db@open done T·154.320153ms
