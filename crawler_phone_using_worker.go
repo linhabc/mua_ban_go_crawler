@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"sync"
 	"time"
 )
 
-func crawlFromCategory(category Category) {
+func crawlFromCategory(category Category, f *os.File) {
 	// open leveldb connection
 	db := createOrOpenDb("./db/" + category.Title)
 	defer db.Close()
@@ -21,7 +22,7 @@ func crawlFromCategory(category Category) {
 		return
 	}
 
-	err := users.getAllUserInformation(res, db)
+	err := users.getAllUserInformation(res, category.Title, f, db)
 	checkError(err)
 	users.TotalPages++
 
@@ -40,18 +41,18 @@ func crawlFromCategory(category Category) {
 			break
 		}
 
-		err := users.getAllUserInformation(res, db)
+		err := users.getAllUserInformation(res, category.Title, f, db)
 		checkError(err)
 	}
 
 	// convert User sang JSON
-	userJSON, err := json.Marshal(users)
-	checkError(err)
+	// userJSON, err := json.Marshal(users)
+	// checkError(err)
 
 	// Ghi dữ liệu vào file JSON
-	dt := time.Now()
-	err = ioutil.WriteFile("./output/"+category.Title+dt.String()+".json", userJSON, 0644)
-	checkError(err)
+	// dt := time.Now()
+	// err = ioutil.WriteFile("./output/"+category.Title+dt.String()+".json", userJSON, 0644)
+	// checkError(err)
 }
 
 func crawlAllFromCategories(categories Categories) {
@@ -74,9 +75,12 @@ func crawlAllFromCategories(categories Categories) {
 }
 
 func worker(id int, jobs <-chan Category) {
+
 	for j := range jobs {
+		dt := time.Now()
+		f, _ := os.OpenFile("./output/"+j.Title+dt.Format("20060102150405")+".json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 		fmt.Println("worker: ", id, "processing job: ", j)
-		crawlFromCategory(j)
+		crawlFromCategory(j, f)
 	}
 }
 
