@@ -12,5 +12,5 @@ docker-compose up
 
 # output folder
 
-output: store generated json file
-ddb: store generated leveldb folder
+- output: store generated json file
+- db: store generated leveldb folder
