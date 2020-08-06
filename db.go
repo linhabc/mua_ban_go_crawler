@@ -109,7 +109,7 @@ func exportDatabaseToJson(url string) {
 // }
 
 // func main() {
-// 	exportDatabaseToJson("Ô tô")
+// 	exportDatabaseToJson("Bat_dong_san")
 // }
 
 //  level db ko co muti thread

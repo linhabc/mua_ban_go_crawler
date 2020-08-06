@@ -17,10 +17,6 @@ func main() {
 
 	_ = json.Unmarshal([]byte(file), &data)
 
-	// schedule to run each 3 hour
-	var wg sync.WaitGroup
-	wg.Add(1)
-
 	crawlAllFromCategories(data)
 }
 
@@ -31,7 +27,7 @@ func crawlAllFromCategories(categories Categories) {
 
 	for w := 1; w <= 10; w++ {
 		wg.Add(1)
-		go worker(w, jobs)
+		go worker(w, jobs, &wg)
 	}
 
 	// schedule to run program each 3 hour
@@ -39,7 +35,7 @@ func crawlAllFromCategories(categories Categories) {
 		for i := 0; i < len(categories.List); i++ {
 			jobs <- categories.List[i]
 		}
-		time.Sleep(3 * time.Hour)
+		time.Sleep(15 * time.Second)
 	}
 
 	close(jobs)
@@ -47,7 +43,9 @@ func crawlAllFromCategories(categories Categories) {
 	wg.Wait()
 }
 
-func worker(id int, jobs <-chan Category) {
+func worker(id int, jobs <-chan Category, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	// create output directory
 	if _, err := os.Stat("./output"); os.IsNotExist(err) {
 		os.Mkdir("./output", 0755)
@@ -61,6 +59,7 @@ func worker(id int, jobs <-chan Category) {
 
 		crawlFromCategory(j, f)
 	}
+
 }
 
 func crawlFromCategory(category Category, f *os.File) {
@@ -80,7 +79,7 @@ func crawlFromCategory(category Category, f *os.File) {
 	checkError(err)
 	users.TotalPages++
 
-	for i := 2; i <= 200; i++ {
+	for i := 2; i <= 5; i++ {
 		users.TotalPages++
 		nextPageLink := users.getNexURL(res)
 
@@ -98,13 +97,4 @@ func crawlFromCategory(category Category, f *os.File) {
 		err := users.getAllUserInformation(res, category.Title, f, db)
 		checkError(err)
 	}
-
-	// convert User sang JSON
-	// userJSON, err := json.Marshal(users)
-	// checkError(err)
-
-	// Ghi dữ liệu vào file JSON
-	// dt := time.Now()
-	// err = ioutil.WriteFile("./output/"+category.Title+dt.String()+".json", userJSON, 0644)
-	// checkError(err)
 }

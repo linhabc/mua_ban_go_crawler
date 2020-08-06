@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -50,14 +51,20 @@ func (users *Users) getNexURL(doc *goquery.Document) string {
 }
 
 func (users *Users) getAllUserInformation(doc *goquery.Document, category string, f *os.File, db *leveldb.DB) error {
+	var wg sync.WaitGroup
 	doc.Find("a.list-item__link").Each(func(i int, s *goquery.Selection) {
 		userLink, _ := s.Attr("href")
-		go users.getUserInformation(userLink, category, f, db)
+		wg.Add(1)
+		go users.getUserInformation(userLink, category, &wg, f, db)
+
 	})
+	wg.Wait()
 	return nil
 }
 
-func (users *Users) getUserInformation(url string, category string, f *os.File, db *leveldb.DB) {
+func (users *Users) getUserInformation(url string, category string, wg *sync.WaitGroup, f *os.File, db *leveldb.DB) {
+	defer wg.Done()
+
 	res := getHTMLPage(url)
 	if res == nil {
 		return
@@ -94,6 +101,7 @@ func (users *Users) getUserInformation(url string, category string, f *os.File, 
 
 	users.TotalUsers++
 	users.List = append(users.List, user)
+
 }
 
 func checkError(err error) {
