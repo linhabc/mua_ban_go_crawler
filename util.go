@@ -21,7 +21,6 @@ func getHTMLPage(url string) *goquery.Document {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		// log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
 		println("ERORR RES STATUS")
 		return nil
 	}
@@ -53,8 +52,6 @@ func (users *Users) getNexURL(doc *goquery.Document) string {
 func (users *Users) getAllUserInformation(doc *goquery.Document, category string, f *os.File, db *leveldb.DB) error {
 	doc.Find("a.list-item__link").Each(func(i int, s *goquery.Selection) {
 		userLink, _ := s.Attr("href")
-
-		// create goroutines
 		go users.getUserInformation(userLink, category, f, db)
 	})
 	return nil
@@ -66,26 +63,30 @@ func (users *Users) getUserInformation(url string, category string, f *os.File, 
 		return
 	}
 
-	splitResult := strings.Split(url, "-")
-	id := splitResult[len(splitResult)-1]
+	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
-	// check if id(url) is exit in db or not
-	checkExist := getData(db, id)
-	if checkExist != "" {
-		println("Exist: " + id)
+	if len(phoneNum) == 0 {
 		return
 	}
 
-	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
+	splitResult := strings.Split(url, "-")
+	id := splitResult[len(splitResult)-1]
+
+	// check if id is exist in db or not
+	checkExist := getData(db, id)
+	if len(checkExist) != 0 {
+		println("Exist: " + id)
+		return
+	}
 
 	user := User{
 		Id:          id,
 		PhoneNumber: phoneNum,
 	}
 
-	putData(db, id, phoneNum)
+	_ = putData(db, id, phoneNum)
 
-	// convert User sang JSON
+	// convert User to JSON
 	userJSON, err := json.Marshal(user)
 
 	checkError(err)
