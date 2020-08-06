@@ -75,8 +75,7 @@ func crawlFromCategory(category Category, f *os.File) {
 		return
 	}
 
-	err := users.getAllUserInformation(res, category.Title, f, db)
-	checkError(err)
+	users.getAllUserInformation(res, category.Title, f, db)
 	users.TotalPages++
 
 	for i := 2; i <= 200; i++ {
@@ -94,7 +93,6 @@ func crawlFromCategory(category Category, f *os.File) {
 			break
 		}
 
-		err := users.getAllUserInformation(res, category.Title, f, db)
-		checkError(err)
+		users.getAllUserInformation(res, category.Title, f, db)
 	}
 }

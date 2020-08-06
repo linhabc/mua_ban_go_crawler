@@ -50,16 +50,14 @@ func (users *Users) getNexURL(doc *goquery.Document) string {
 	return nextPageLink
 }
 
-func (users *Users) getAllUserInformation(doc *goquery.Document, category string, f *os.File, db *leveldb.DB) error {
+func (users *Users) getAllUserInformation(doc *goquery.Document, category string, f *os.File, db *leveldb.DB) {
 	var wg sync.WaitGroup
 	doc.Find("a.list-item__link").Each(func(i int, s *goquery.Selection) {
 		userLink, _ := s.Attr("href")
 		wg.Add(1)
 		go users.getUserInformation(userLink, category, &wg, f, db)
-
 	})
 	wg.Wait()
-	return nil
 }
 
 func (users *Users) getUserInformation(url string, category string, wg *sync.WaitGroup, f *os.File, db *leveldb.DB) {
@@ -84,6 +82,8 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 	if len(checkExist) != 0 {
 		println("Exist: " + id)
 		return
+	} else {
+		println("None_exist: " + id)
 	}
 
 	user := User{
@@ -101,7 +101,6 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 
 	users.TotalUsers++
 	users.List = append(users.List, user)
-
 }
 
 func checkError(err error) {
