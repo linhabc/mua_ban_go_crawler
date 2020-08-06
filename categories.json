@@ -2,37 +2,37 @@
   "total": 10,
   "categories": [
     {
-      "title": "Bất động sản",
+      "title": "Bat_dong_san",
       "url": "https://muaban.net/mua-ban-nha-dat-cho-thue-toan-quoc-l0-c3"
     },
     {
-      "title": "Việc làm, Tuyển sinh",
+      "title": "Viec_lam_tuyen_sinh",
       "url": "https://muaban.net/viec-lam-tuyen-sinh-toan-quoc-l0-c1"
     },
-    { "title": "Ô tô", "url": "https://muaban.net/o-to-toan-quoc-l0-c4" },
-    { "title": "Xe máy", "url": "https://muaban.net/xe-may-toan-quoc-l0-c5" },
+    { "title": "O_to", "url": "https://muaban.net/o-to-toan-quoc-l0-c4" },
+    { "title": "Xe_may", "url": "https://muaban.net/xe-may-toan-quoc-l0-c5" },
     {
-      "title": "Dịch vụ",
+      "title": "Dich_vu",
       "url": "https://muaban.net/dich-vu-toan-quoc-l0-c9"
     },
     {
-      "title": "Đồ điện tử",
+      "title": "Do_dien_tu",
       "url": "https://muaban.net/do-dien-tu-toan-quoc-l0-c6"
     },
     {
-      "title": "Điện máy, Đồ gia dụng",
+      "title": "Dien_may_do_gia_dung",
       "url": "https://muaban.net/dien-may-do-gia-dung-toan-quoc-l0-c7"
     },
     {
-      "title": "Sở thích, Mặt hàng khác",
+      "title": "So_thich_mat_hang_khac",
       "url": "https://muaban.net/so-thich-mat-hang-khac-toan-quoc-l0-c8"
     },
     {
-      "title": "Thời trang, Mỹ phẩm",
+      "title": "Thoi_trang_my_pham",
       "url": "https://muaban.net/thoi-trang-my-pham-toan-quoc-l0-c2"
     },
     {
-      "title": "Đối tác, Cộng đồng",
+      "title": "Doi_tac_cong_dong",
       "url": "https://muaban.net/doi-tac-cong-dong-toan-quoc-l0-ca"
     }
   ]
