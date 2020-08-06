@@ -35,7 +35,7 @@ func crawlAllFromCategories(categories Categories) {
 		for i := 0; i < len(categories.List); i++ {
 			jobs <- categories.List[i]
 		}
-		time.Sleep(15 * time.Second)
+		time.Sleep(3 * time.Hour)
 	}
 
 	close(jobs)
@@ -79,7 +79,7 @@ func crawlFromCategory(category Category, f *os.File) {
 	checkError(err)
 	users.TotalPages++
 
-	for i := 2; i <= 5; i++ {
+	for i := 2; i <= 200; i++ {
 		users.TotalPages++
 		nextPageLink := users.getNexURL(res)
 
