@@ -75,6 +75,13 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 	price := res.Find(".price-container__value").Text()
 	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
+	userName = strings.TrimSpace(userName)
+	phoneNum = strings.TrimSpace(phoneNum)
+	title = strings.TrimSpace(title)
+	time = strings.TrimSpace(time)
+	location = strings.TrimSpace(location)
+	price = strings.TrimSpace(price)
+
 	if len(phoneNum) == 0 {
 		return
 	}
