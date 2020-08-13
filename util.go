@@ -68,6 +68,11 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 		return
 	}
 
+	userName := res.Find(".user-info__fullname").Text()
+	title := res.Find(".title").Text()
+	time := res.Find(".location-clock__clock").Text()
+	location := res.Find(".location-clock__location").Text()
+	price := res.Find(".price-container__value").Text()
 	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
 	if len(phoneNum) == 0 {
@@ -82,13 +87,17 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 	if len(checkExist) != 0 {
 		println("Exist: " + id)
 		return
-	} else {
-		println("None_exist: " + id)
 	}
+	println("None_exist: " + id)
 
 	user := User{
-		Id:          id,
+		ID:          id,
 		PhoneNumber: phoneNum,
+		UserName:    userName,
+		Title:       title,
+		Time:        time,
+		Location:    location,
+		Price:       price,
 	}
 
 	_ = putData(db, id, phoneNum)
