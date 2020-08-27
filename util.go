@@ -75,12 +75,17 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 	price := res.Find(".price-container__value").Text()
 	phoneNum, _ := res.Find("span[mobile]").Attr("mobile")
 
+	itemType := res.Find("li.breadcrumb__left-item:last-child").Find("a span").Text()
+
+	println(itemType)
+
 	userName = strings.TrimSpace(userName)
 	phoneNum = strings.TrimSpace(phoneNum)
 	title = strings.TrimSpace(title)
 	time = strings.TrimSpace(time)
 	location = strings.TrimSpace(location)
 	price = strings.TrimSpace(price)
+	itemType = strings.TrimSpace(itemType)
 
 	if len(phoneNum) == 0 {
 		return
@@ -105,6 +110,7 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 		Time:        time,
 		Location:    location,
 		Price:       price,
+		Type:        itemType,
 	}
 
 	_ = putData(db, id, phoneNum)
