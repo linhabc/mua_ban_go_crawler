@@ -77,8 +77,6 @@ func (users *Users) getUserInformation(url string, category string, wg *sync.Wai
 
 	itemType := res.Find("li.breadcrumb__left-item:last-child").Find("a span").Text()
 
-	println(itemType)
-
 	userName = strings.TrimSpace(userName)
 	phoneNum = strings.TrimSpace(phoneNum)
 	title = strings.TrimSpace(title)
